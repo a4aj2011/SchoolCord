@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>P2P School GC</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- PeerJS library for database-free P2P connection -->
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+</head>
+<body>
+
+  <!-- Join Modal -->
+  <div id="username-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <i class="fa-solid fa-network-wired modal-icon"></i>
+        <h2>Welcome to P2P GC</h2>
+        <p>Pick a nickname to join the peer-to-peer chat.</p>
+      </div>
+      <form id="username-form">
+        <input type="text" id="username-input" placeholder="Your nickname..." maxlength="20" required autocomplete="off">
+        <button type="submit" id="join-btn">Join Chat</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- App Container -->
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="server-header">
+        <i class="fa-solid fa-users-viewfinder"></i>
+        <h2>Squad Lounge</h2>
+      </div>
+      <div class="channel-list">
+        <div class="channel-category">ROOM SHARE LINK</div>
+        <div class="invite-box">
+          <input type="text" id="share-link" readonly value="Generating link...">
+          <button id="copy-btn"><i class="fa-solid fa-copy"></i> Copy</button>
+        </div>
+      </div>
+      <div class="user-profile">
+        <div class="avatar" id="current-user-avatar">?</div>
+        <div class="user-info">
+          <span id="current-user-name" class="username">Guest</span>
+          <span class="status" id="connection-status"><span class="status-dot"></span> Connecting...</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="chat-area">
+      <header class="chat-header">
+        <div class="channel-title">
+          <i class="fa-solid fa-hashtag"></i>
+          <h3>general-chat</h3>
+        </div>
+        <p class="channel-desc">Direct Peer-to-Peer (Saved Locally)</p>
+      </header>
+
+      <div id="message-container" class="message-container"></div>
+
+      <footer class="chat-input-area">
+        <form id="message-form">
+          <input type="text" id="message-input" placeholder="Message #general-chat..." autocomplete="off">
+          <button type="submit" id="send-btn">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </form>
+      </footer>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
