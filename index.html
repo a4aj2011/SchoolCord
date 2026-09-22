@@ -3,74 +3,451 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>P2P School GC</title>
+  <title>LinkChat</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- PeerJS library for database-free P2P connection -->
-  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 </head>
+
 <body>
 
-  <!-- Join Modal -->
-  <div id="username-modal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <i class="fa-solid fa-network-wired modal-icon"></i>
-        <h2>Welcome to P2P GC</h2>
-        <p>Pick a nickname to join the peer-to-peer chat.</p>
-      </div>
-      <form id="username-form">
-        <input type="text" id="username-input" placeholder="Your nickname..." maxlength="20" required autocomplete="off">
-        <button type="submit" id="join-btn">Join Chat</button>
-      </form>
-    </div>
-  </div>
+  <div class="app-shell">
 
-  <!-- App Container -->
-  <div class="app-container">
-    <aside class="sidebar">
-      <div class="server-header">
-        <i class="fa-solid fa-users-viewfinder"></i>
-        <h2>Squad Lounge</h2>
-      </div>
-      <div class="channel-list">
-        <div class="channel-category">ROOM SHARE LINK</div>
-        <div class="invite-box">
-          <input type="text" id="share-link" readonly value="Generating link...">
-          <button id="copy-btn"><i class="fa-solid fa-copy"></i> Copy</button>
-        </div>
-      </div>
-      <div class="user-profile">
-        <div class="avatar" id="current-user-avatar">?</div>
-        <div class="user-info">
-          <span id="current-user-name" class="username">Guest</span>
-          <span class="status" id="connection-status"><span class="status-dot"></span> Connecting...</span>
-        </div>
-      </div>
+    <!-- Server rail -->
+    <aside class="server-rail">
+      <div class="app-logo">L</div>
+
+      <div class="rail-divider"></div>
+
+      <button class="rail-icon active" title="LinkChat">💬</button>
+      <button class="rail-icon" title="Friends">👥</button>
+      <button class="rail-icon" title="Add Friend" id="railAddFriend">＋</button>
     </aside>
 
-    <main class="chat-area">
-      <header class="chat-header">
-        <div class="channel-title">
-          <i class="fa-solid fa-hashtag"></i>
-          <h3>general-chat</h3>
+    <!-- Friends sidebar -->
+    <aside class="conversation-sidebar">
+
+      <div class="sidebar-top">
+        <button class="server-name" id="serverNameButton">
+          <span>LinkChat</span>
+          <span class="chevron">⌄</span>
+        </button>
+      </div>
+
+      <div class="sidebar-content">
+
+        <button class="add-friend-btn" id="addFriendButton">
+          <span class="add-icon">＋</span>
+          Add Friend
+        </button>
+
+        <div class="section-label">DIRECT MESSAGES</div>
+
+        <div id="friendList">
+
+          <button class="friend-item" id="friendItem">
+            <div class="avatar" id="friendAvatar">F</div>
+
+            <div class="friend-info">
+              <strong id="friendName">Friend</strong>
+              <small id="friendStatus">Not connected</small>
+            </div>
+
+            <span class="unread-badge hidden" id="unreadBadge">0</span>
+          </button>
+
         </div>
-        <p class="channel-desc">Direct Peer-to-Peer (Saved Locally)</p>
+
+        <div class="empty-sidebar" id="emptySidebar">
+          <div class="empty-icon">💬</div>
+          <p>
+            Your conversations will appear here after you connect with a friend.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- User panel -->
+      <div class="user-panel">
+
+        <div class="avatar me-avatar" id="myAvatar">Y</div>
+
+        <div class="user-details">
+          <strong id="myNameLabel">You</strong>
+          <small>
+            <span class="tiny-dot"></span>
+            Online
+          </small>
+        </div>
+
+        <button class="icon-button" id="settingsButton" title="Settings">
+          ⚙
+        </button>
+
+      </div>
+
+    </aside>
+
+    <!-- Main chat -->
+    <main class="chat-area">
+
+      <header class="chat-header">
+
+        <div class="chat-person">
+
+          <div class="avatar large" id="headerAvatar">F</div>
+
+          <div>
+            <h1 id="headerName">Welcome to LinkChat</h1>
+            <p id="headerStatus">
+              Connect with a friend to start messaging
+            </p>
+          </div>
+
+        </div>
+
+        <div class="header-actions">
+
+          <button class="header-icon" id="headerAddButton" title="Add Friend">
+            ＋
+          </button>
+
+          <button class="header-icon" id="infoButton" title="Information">
+            ⓘ
+          </button>
+
+        </div>
+
       </header>
 
-      <div id="message-container" class="message-container"></div>
+      <!-- Messages -->
+      <section class="messages" id="messages">
 
-      <footer class="chat-input-area">
-        <form id="message-form">
-          <input type="text" id="message-input" placeholder="Message #general-chat..." autocomplete="off">
-          <button type="submit" id="send-btn">
-            <i class="fa-solid fa-paper-plane"></i>
+        <div class="welcome-panel" id="welcomePanel">
+
+          <div class="welcome-logo">L</div>
+
+          <h2>Welcome to LinkChat</h2>
+
+          <p>
+            Simple messaging between friends.
+            No accounts, no message database, and no saved chat history.
+          </p>
+
+          <button class="primary-button" id="startChatButton">
+            Start a chat
           </button>
-        </form>
-      </footer>
+
+          <div class="feature-row">
+            <div><span>✓</span> No account</div>
+            <div><span>✓</span> No database</div>
+            <div><span>✓</span> Peer-to-peer</div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- Typing indicator -->
+      <div class="typing hidden" id="typingIndicator">
+        Friend is typing...
+      </div>
+
+      <!-- Message composer -->
+      <form class="composer" id="messageForm">
+
+        <button
+          type="button"
+          class="composer-icon"
+          id="emojiButton"
+          title="Emoji"
+        >
+          ☺
+        </button>
+
+        <input
+          type="text"
+          id="messageInput"
+          placeholder="Connect to a friend first..."
+          autocomplete="off"
+          disabled
+        >
+
+        <button
+          type="submit"
+          class="send-button"
+          id="sendBtn"
+          disabled
+        >
+          Send
+        </button>
+
+      </form>
+
+      <div class="composer-note">
+        Messages are sent directly between connected browsers.
+      </div>
+
     </main>
+
   </div>
 
+
+  <!-- Connection Modal -->
+  <div class="modal-backdrop hidden" id="modalBackdrop">
+
+    <div class="modal">
+
+      <button class="modal-close" id="modalClose">
+        ×
+      </button>
+
+      <div class="modal-icon">🔗</div>
+
+      <h2 id="modalTitle">Start a chat</h2>
+
+      <p id="modalDescription">
+        Choose how you want to connect.
+      </p>
+
+      <!-- Choice -->
+      <div id="choiceStep">
+
+        <div class="choice-grid">
+
+          <button class="choice-card" id="createChatButton">
+
+            <span>📤</span>
+
+            <strong>Create a chat</strong>
+
+            <small>
+              Make a connection code and give it to your friend.
+            </small>
+
+          </button>
+
+          <button class="choice-card" id="joinChatButton">
+
+            <span>📥</span>
+
+            <strong>Join a chat</strong>
+
+            <small>
+              Paste the connection code your friend gave you.
+            </small>
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- Host -->
+      <div class="hidden" id="hostStep">
+
+        <div class="modal-step">
+
+          <div class="step-title">
+            <span>1</span>
+            Give this code to your friend
+          </div>
+
+          <textarea
+            id="offerCode"
+            readonly
+            placeholder="Generating connection code..."
+          ></textarea>
+
+          <button
+            class="secondary-button"
+            id="copyOfferButton"
+            type="button"
+          >
+            Copy Code
+          </button>
+
+        </div>
+
+        <div class="modal-step">
+
+          <div class="step-title">
+            <span>2</span>
+            Paste your friend's response
+          </div>
+
+          <textarea
+            id="answerCode"
+            placeholder="Paste their response here..."
+          ></textarea>
+
+          <button
+            class="primary-button"
+            id="connectAnswerButton"
+            type="button"
+          >
+            Connect
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- Guest -->
+      <div class="hidden" id="guestStep">
+
+        <div class="modal-step">
+
+          <div class="step-title">
+            <span>1</span>
+            Paste your friend's code
+          </div>
+
+          <textarea
+            id="incomingOffer"
+            placeholder="Paste the code your friend sent you..."
+          ></textarea>
+
+          <button
+            class="primary-button"
+            id="createAnswerButton"
+            type="button"
+          >
+            Generate Response
+          </button>
+
+        </div>
+
+        <div class="modal-step">
+
+          <div class="step-title">
+            <span>2</span>
+            Give this response to your friend
+          </div>
+
+          <textarea
+            id="answerOutput"
+            readonly
+            placeholder="Your response will appear here..."
+          ></textarea>
+
+          <button
+            class="secondary-button"
+            id="copyAnswerButton"
+            type="button"
+          >
+            Copy Response
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="modal-status" id="modalStatus"></div>
+
+      <p class="modal-note">
+        LinkChat does not use a database. Messages are only available while
+        the connection is active.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- Profile Modal -->
+  <div class="modal-backdrop hidden" id="profileBackdrop">
+
+    <div class="modal small-modal">
+
+      <button class="modal-close" id="profileClose">
+        ×
+      </button>
+
+      <div class="modal-icon">👤</div>
+
+      <h2>Your Profile</h2>
+
+      <p>
+        Choose the name your friend will see.
+      </p>
+
+      <label class="input-label" for="nameInput">
+        Display Name
+      </label>
+
+      <input
+        class="text-input"
+        id="nameInput"
+        type="text"
+        maxlength="20"
+        placeholder="Your name"
+      >
+
+      <button
+        class="primary-button"
+        id="saveNameButton"
+        type="button"
+      >
+        Save Name
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- Information Modal -->
+  <div class="modal-backdrop hidden" id="infoBackdrop">
+
+    <div class="modal small-modal">
+
+      <button class="modal-close" id="infoClose">
+        ×
+      </button>
+
+      <div class="modal-icon">ℹ️</div>
+
+      <h2>About LinkChat</h2>
+
+      <p>
+        LinkChat is a simple browser-to-browser messenger.
+      </p>
+
+      <div class="info-box">
+
+        <strong>Messages</strong>
+        <span>
+          Messages are sent directly between the two browsers.
+        </span>
+
+        <strong>No database</strong>
+        <span>
+          LinkChat does not save your conversations.
+        </span>
+
+        <strong>No account</strong>
+        <span>
+          You do not need to create an account.
+        </span>
+
+      </div>
+
+      <button
+        class="secondary-button"
+        id="infoDoneButton"
+        type="button"
+      >
+        Done
+      </button>
+
+    </div>
+
+  </div>
+
+
   <script src="script.js"></script>
+
 </body>
 </html>
